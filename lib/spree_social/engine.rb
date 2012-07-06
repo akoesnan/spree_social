@@ -1,8 +1,8 @@
 module SpreeSocial
   OAUTH_PROVIDERS = [
-    ["Facebook", "facebook"],
-    ["Twitter", "twitter"],
-    ["Github", "github"]
+      ["Facebook", "facebook", "email,user_birthday,publish_actions"],
+      ["Twitter", "twitter", nil],
+      ["Github", "github", nil]
   ]
 
   class Engine < Rails::Engine
@@ -25,7 +25,7 @@ module SpreeSocial
   end
 
   # Setup all OAuth providers
-  def self.init_provider(provider)
+  def self.init_provider(provider, provider_scope)
     return unless ActiveRecord::Base.connection.table_exists?('spree_authentication_methods')
     key, secret = nil
     Spree::AuthenticationMethod.where(:environment => ::Rails.env).each do |auth_method|
@@ -35,12 +35,16 @@ module SpreeSocial
         puts("[Spree Social] Loading #{auth_method.provider.capitalize} as authentication source")
       end
     end
-    self.setup_key_for(provider.to_sym, key, secret)
+    self.setup_key_for(provider.to_sym, key, secret, provider_scope)
   end
 
-  def self.setup_key_for(provider, key, secret)
+  def self.setup_key_for(provider, key, secret, provider_scope)
     Devise.setup do |config|
-      config.omniauth provider, key, secret
+      if (provider_scope.nil?)
+        config.omniauth provider, key, secret, :display => 'popup'
+      else
+        config.omniauth provider, key, secret, :scope => provider_scope, :display => 'popup'
+      end
     end
   end
 end
