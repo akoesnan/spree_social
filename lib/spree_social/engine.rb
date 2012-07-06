@@ -1,9 +1,11 @@
 module SpreeSocial
   OAUTH_PROVIDERS = [
-      ["Facebook", "facebook", "email,user_birthday,publish_actions"],
-      ["Twitter", "twitter", nil],
-      ["Github", "github", nil]
+      ["Facebook", "facebook"],
+      ["Twitter", "twitter"],
+      ["Github", "github"]
   ]
+
+  OAUTH_PROVIDERS_SCOPE = {"facebook" => "email,user_birthday,publish_actions"}
 
   class Engine < Rails::Engine
     engine_name 'spree_social'
@@ -25,7 +27,7 @@ module SpreeSocial
   end
 
   # Setup all OAuth providers
-  def self.init_provider(provider, provider_scope)
+  def self.init_provider(provider)
     return unless ActiveRecord::Base.connection.table_exists?('spree_authentication_methods')
     key, secret = nil
     Spree::AuthenticationMethod.where(:environment => ::Rails.env).each do |auth_method|
@@ -35,6 +37,8 @@ module SpreeSocial
         puts("[Spree Social] Loading #{auth_method.provider.capitalize} as authentication source")
       end
     end
+
+    provider_scope = OAUTH_PROVIDERS_SCOPE[provider]
     self.setup_key_for(provider.to_sym, key, secret, provider_scope)
   end
 
