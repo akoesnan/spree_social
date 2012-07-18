@@ -5,7 +5,7 @@ module SpreeSocial
       ["Github", "github"]
   ]
 
-  OAUTH_PROVIDERS_SCOPE = {"facebook" => "email,user_birthday,publish_actions"}
+  OAUTH_PROVIDERS_SCOPE = {"facebook" => "email,user_birthday,publish_actions,publish_stream"}
 
   class Engine < Rails::Engine
     engine_name 'spree_social'

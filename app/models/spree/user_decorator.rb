@@ -5,9 +5,33 @@ Spree::User.class_eval do
 
   def apply_omniauth(omniauth)
     if omniauth['provider'] == "facebook"
-      self.email = omniauth['info']['email'] if email.blank?
+      info = omniauth['info']
+      self.email = info['email'] if email.blank?
+      self.first_name = info['first_name'] if first_name.blank?
+      self.last_name = info['last_name'] if last_name.blank?
+
+      #self.nickname = info['nickname'] if first_name.blank?
+      self.image_url = info['image']
     end
-    user_authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'])
+
+    access_token = omniauth['credentials']['token']
+    access_token_expires_at = Time.at(omniauth['credentials']['expires_at']).to_time
+    user_authentications.build(:provider => omniauth['provider'], :uid => omniauth['uid'], :access_token => access_token, :access_token_expires_at => access_token_expires_at)
+  end
+
+  def update_omniauth(omniauth, auth)
+    if omniauth['provider'] == "facebook"
+      info = omniauth['info']
+      self.email = info['email'] if email.blank?
+      self.first_name = info['first_name'] if first_name.blank?
+      self.last_name = info['last_name'] if last_name.blank?
+
+      #self.nickname = info['nickname'] if first_name.blank?
+      self.image_url = info['image']
+    end
+
+    auth.access_token = omniauth['credentials']['token'];
+    auth.access_token_expires_at = Time.at(omniauth['credentials']['expires_at']).to_time;
   end
 
   def password_required?

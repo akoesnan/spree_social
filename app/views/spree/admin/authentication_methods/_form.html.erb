@@ -20,6 +20,12 @@
   <%= auth_form.text_field :api_secret %>
 <% end %>
 
+<%= auth_form.field_container :app_namespace do %>
+  <%= auth_form.label :app_namespace, t(:social_app_namespace) %><br />
+  <%= auth_form.text_field :app_namespace %>
+<% end %>
+
+
 <%= auth_form.field_container :active do %>
   <%= auth_form.label :active, t(:active) %><br />
   <%= auth_form.radio_button :active, :true %><%= t(:yes) %>

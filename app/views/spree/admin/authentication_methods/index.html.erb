@@ -16,6 +16,7 @@
     <th><%= t("social_provider") %></th>
     <th><%= t("social_api_key") %></th>
     <th><%= t("social_api_secret") %></th>
+    <th><%= t("social_app_namespace") %></th>
     <th><%= t("environment") %></th>
     <th><%= t("active") %></th>
     <th data-hook="admin_social_methods_index_header_actions">&nbsp;</th>
@@ -26,6 +27,7 @@
         <td><%= method.provider %></td>
         <td><%= method.api_key %></td>
         <td><%= method.api_secret %></td>
+        <td><%= method.app_namespace %></td>
         <td><%= method.environment.to_s.titleize %></td>
         <td><%= method.active ? t(:yes) : t(:no) %></td>
         <td>

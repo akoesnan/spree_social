@@ -15,6 +15,7 @@ class Spree::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           authentication = Spree::UserAuthentication.find_by_provider_and_uid(auth_hash['provider'], auth_hash['uid'])
 
           if authentication.present?
+            authentication.user.update_omniauth(auth_hash, authentication)
             flash[:notice] = "Signed in successfully"
             sign_in_and_redirect :user, authentication.user
           elsif current_user
